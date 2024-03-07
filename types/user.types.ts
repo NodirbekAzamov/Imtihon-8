@@ -2,44 +2,44 @@ import { ReactNode } from "react";
 
 
 export interface IUser {
-    first_name: ReactNode | string | File ,
-    // first_name: string | FormDataEntryValue | null  ,
-    last_name:  FormDataEntryValue | null,
-    username:  FormDataEntryValue | null,
-    password:  FormDataEntryValue | null,
-    age:  number | null,
-    description:  FormDataEntryValue | null,
+    first_name: string,
+    last_name:  string,
+    username: string,
+    password: string,
+    age: number | string,
+    description:  string,
+    avatar: string ,
+    _id?: string ,
+    role:  string,
+    image?: string 
+}
+
+export interface IUserPayload {
+    first_name: string ,
+    last_name: string,
+    username: string,
+    password: string,
+    age: number | null,
+    description: string,
     avatar: string | undefined,
     _id?: string | undefined,
-    role:  FormDataEntryValue | null | string ,
+    role: string,
     image?: string | undefined
 }
 
 
-export interface IGenre {
-    // id?: I_ID,
-    id?: number | undefined,
-    name: string,
-    createdAt?: string,
-    updatedAt?: string,
-}
-
-
-export interface IAuthor {
-    id?: number | undefined,
-    full_name: string,
-    birthdate?: string,
-    country?: string,
-    image?: string,
-}
-
-
 export interface PageType {
-    id: number,
+    id: number | string,
     component: string,
     title: string,
+    path: string
 }
 
+
+export interface Page {
+    q:string;
+    page: number
+}
 
 
 

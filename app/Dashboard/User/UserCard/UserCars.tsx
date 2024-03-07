@@ -1,113 +1,3 @@
-// import * as React from 'react';
-// import { styled } from '@mui/material/styles';
-// import Card from '@mui/material/Card';
-// import CardHeader from '@mui/material/CardHeader';
-// import CardMedia from '@mui/material/CardMedia';
-// import CardContent from '@mui/material/CardContent';
-// import CardActions from '@mui/material/CardActions';
-// import Collapse from '@mui/material/Collapse';
-// import Avatar from '@mui/material/Avatar';
-// import IconButton, { IconButtonProps } from '@mui/material/IconButton';
-// import Typography from '@mui/material/Typography';
-// import { red } from '@mui/material/colors';
-// import FavoriteIcon from '@mui/icons-material/Favorite';
-// import ShareIcon from '@mui/icons-material/Share';
-// import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-// import MoreVertIcon from '@mui/icons-material/MoreVert';
-// import { IUser } from '@/types/user.types';
-// import Image from 'next/image';
-
-// interface ExpandMoreProps extends IconButtonProps {
-//     expand: boolean;
-// }
-
-// const ExpandMore = styled((props: ExpandMoreProps) => {
-//     const { expand, ...other } = props;
-//     return <IconButton {...other} />;
-// })(({ theme, expand }) => ({
-//     transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-//     marginLeft: 'auto',
-//     transition: theme.transitions.create('transform', {
-//         duration: theme.transitions.duration.shortest,
-//     }),
-// }));
-
-// export default function UserCard({ item }: { item:  IUser  }) {
-//     const [expanded, setExpanded] = React.useState(false);
-
-//     const handleExpandClick = () => {
-//         setExpanded(!expanded);
-//     };    
-
-//     return (
-//         <Card sx={{ maxWidth: 345 }}>
-//             <CardHeader
-//                 avatar={<Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">R</Avatar>}
-//                 action={ <IconButton aria-label="settings"><MoreVertIcon /></IconButton>}
-//                 title={item?.role}
-//                 subheader={item?.username}
-//                 />
-//             <CardMedia
-//                 component="img"
-//                 height="194"
-//                 image={item?.avatar}
-//                 alt="Paella dish" />
-//             <CardContent>
-//                 <Typography variant="body2" color="text.secondary">
-//                     This impressive paella is a perfect party dish and a fun meal to cook
-//                     together with your guests. Add 1 cup of frozen peas along with the mussels,
-//                     if you like.
-//                 </Typography>
-//             </CardContent>
-//             <CardActions disableSpacing className='flex justify-between'>
-//                 {/* <IconButton aria-label="add to favorites">
-//                     <FavoriteIcon />
-//                 </IconButton> */}
-//                 {/* <IconButton aria-label="share">
-//                     <ShareIcon />
-//                 </IconButton> */}
-//                 <h6>{item?.age} years old</h6>
-//                 {/* <ExpandMore
-//                     expand={expanded}
-//                     onClick={handleExpandClick}
-//                     aria-expanded={expanded}
-//                     aria-label="show more">
-//                     <ExpandMoreIcon />
-//                 </ExpandMore> */}
-//                 <h6>{item?.first_name}</h6>
-//             </CardActions>
-//             {/* <Collapse in={expanded} timeout="auto" unmountOnExit>
-//                 <CardContent>
-//                     <Typography paragraph>Method:</Typography>
-//                     <Typography paragraph>
-//                         Heat 1/2 cup of the broth in a pot until simmering, add saffron and set
-//                         aside for 10 minutes.
-//                     </Typography>
-//                     <Typography paragraph>
-//                         Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over
-//                         medium-high heat. Add chicken, shrimp and chorizo, and cook, stirring
-//                         occasionally until lightly browned, 6 to 8 minutes. Transfer shrimp to a
-//                         large plate and set aside, leaving chicken and chorizo in the pan. Add
-//                         pimentón, bay leaves, garlic, tomatoes, onion, salt and pepper, and cook,
-//                         stirring often until thickened and fragrant, about 10 minutes. Add
-//                         saffron broth and remaining 4 1/2 cups chicken broth; bring to a boil.
-//                     </Typography>
-//                     <Typography paragraph>
-//                         Add rice and stir very gently to distribute. Top with artichokes and
-//                         peppers, and cook without stirring, until most of the liquid is absorbed,
-//                         15 to 18 minutes. Reduce heat to medium-low, add reserved shrimp and
-//                         mussels, tucking them down into the rice, and cook again without
-//                         stirring, until mussels have opened and rice is just tender, 5 to 7
-//                         minutes more. (Discard any mussels that don&apos;t open.)
-//                     </Typography>
-//                     <Typography>
-//                         Set aside off of the heat to let rest for 10 minutes, and then serve.
-//                     </Typography>
-//                 </CardContent>
-//             </Collapse> */}
-//         </Card>
-//     );
-// }
 
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import Card from '@mui/material/Card';
@@ -121,18 +11,19 @@ import Typography from '@mui/material/Typography';
 import { red } from '@mui/material/colors';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { IUser } from '@/types/user.types';
+import { IUser, IUserPayload } from '@/types/user.types';
 import DeleteUserModal from '@/app/Modals/UserModal/DeleteUserModal/page';
 import { log } from 'util';
 
 interface IUserCardProps {
     item: IUser,
     setModalEdit: Dispatch<SetStateAction<boolean>>,
-    userId: string | undefined;
-    setUserId: Dispatch<SetStateAction<string | undefined>>
+    userId: string | IUser;
+    setUserId: Dispatch<SetStateAction<IUser>>
+    setFile: Dispatch<SetStateAction<string>>
 }
 
-const UserCard: React.FC<IUserCardProps> = ({ item, setModalEdit, userId,  setUserId }) => {
+const UserCard: React.FC<IUserCardProps> = ({ item, setModalEdit, userId, setFile, setUserId }) => {
     const [expanded, setExpanded] = React.useState(false);
     const [userModal, setUserModal] = useState(false);
     const [itemIdd, setItemId] = useState<string | undefined>("")
@@ -146,9 +37,10 @@ const UserCard: React.FC<IUserCardProps> = ({ item, setModalEdit, userId,  setUs
         setItemId(itemId);
     }
 
-    const editUser = (item: any) => {
+    const editUser = (item: IUser) => {
         setModalEdit(true)
         setUserId(item)
+        setFile(item?.avatar)
     }
 
     const toggle = () => {
@@ -162,16 +54,16 @@ const UserCard: React.FC<IUserCardProps> = ({ item, setModalEdit, userId,  setUs
     return (
         <div>
             <DeleteUserModal open={userModal} toggle={toggle} id={itemIdd} />
-            <Card sx={{ maxWidth: 300 }} className=' relative'>
+            <Card sx={{ width: 300 }} className='   relative'>
                 <CardHeader
                     avatar={<Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">R</Avatar>}
                     action={<IconButton aria-label="settings" onClick={popUp}><MoreVertIcon /></IconButton>}
                     title={`${item?.role}`}
                     subheader={`${item?.username}`}
                 />
-                <div className={`${active ? " " : " hidden"} absolute border-[1px] top-1px right-0 bg-white w-[100px] h-[100px]`}>
+                <div className={`${active ? " " : " hidden"} absolute border-[1px] top-1px right-0 bg-white w-[100px] rounded-[5px] `}>
                     <button onClick={() => deleteUser(item?._id)} className='py-[5px] px-[15px] w-[100%] border-[1px] bg-red-700 text-[#fff] rounded-[5px]'>delete</button>
-                    <button onClick={() => editUser(item)} className='py-[5px] px-[15px] w-[100%] border-[1px] bg-blue-700 text-[#fff] rounded-[5px]'>edit</button>
+                    <button onClick={() => editUser(item)} className='py-[5px] px-[15px] w-[100%] mt-[10px] border-[1px] bg-blue-700 text-[#fff] rounded-[5px]'>edit</button>
                 </div>
                 <CardMedia
                     component="img"
@@ -179,13 +71,12 @@ const UserCard: React.FC<IUserCardProps> = ({ item, setModalEdit, userId,  setUs
                     image={`http://localhost:8080/${item?.avatar}`}
                     alt="Paella dish" />
                 <CardContent>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" color="text.secondary" className='overflow-y-auto h-[100px] w-[300px]'>
                         {item?.description}
                     </Typography>
                 </CardContent>
                 <CardActions disableSpacing className='flex justify-between'>
                     <h6>{item?.age} years old</h6>
-
                     <h6>{item?.first_name}</h6>
                 </CardActions>
             </Card>
